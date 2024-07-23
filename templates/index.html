@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Clone</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+</head>
+
+<body>
+    <div class="main-flex-container">
+        <div class="left-flex-container flex-item">
+            <div class="nav-links">
+                <ul>
+                    <li class="nav-items logo"><a  href="#" style="border: 4px solid black; border-radius: 30px; ">DevChat </a></li>
+                    <li class="nav-items current-page"><a style="display: flex; gap: 10px;" href="#"><img src="/static/icons/home-svgrepo-com.svg" style=" width: 20px; height: 25px; " alt=""> <h4>Home</h4></a></li>
+                    <li class="nav-items"><a style="display: flex; gap: 10px; align-items: center;" href="#"><img src="/static/icons/explore-find-glass-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""> <h4>Explore</h4></a></li>
+                    <li class="nav-items"><a style="display: flex; gap: 10px; align-items: center;" href="#"><img src="/static/icons/notifications-circle-outline-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""> <h4>Notifications</h4></a></li>
+                    <li class="nav-items"><a style="display: flex; gap: 10px; align-items: center;" href="#"><img src="/static/icons/messages-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""> <h4>Messages</h4></a></li>
+                    <li class="nav-items"><a style="display: flex; gap: 10px; align-items: center;" href="#"><img src="/static/icons/bookmarks-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""> <h4>Bookmarks</h4></a></li>
+                    <li class="nav-items"><a style="display: flex; gap: 10px; align-items: center;" href="#"><img src="/static/icons/sheet-list-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""> <h4>Lists</h4></a></li>
+                    <li class="nav-items"><a style="display: flex; gap: 10px; align-items: center;" href="#"><img src="/static/icons/profile-round-1346-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""> <h4>Profile</h4></a></li>
+                    <li class="nav-items"><a style="display: flex; gap: 10px; align-items: center;" href="#"><img src="/static/icons/more-horizontal-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""> <h4>More</h4></a></li>
+                </ul>
+            </div>
+            <div class="tweet"><a href="#">Tweet</a></div>
+            <div class="profile-box">
+                <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="profile">
+                <div class="profile-link">
+                    <p class="full-name">David Herbert</p>
+                    <p class="user-name">@king.david</p>
+                </div>
+                <div class="options-icon"><i class="fas fa-caret-down"></i></div>
+            </div>
+        </div>
+        <div class="center-flex-container flex-item">
+            <div class="home">
+                <h1>Home</h1>
+                <i class="fas fa-magic"></i>
+            </div>
+            <div class="post-tweet">
+                <form id="tweetForm" method="POST" action="{{ url_for('tweet') }}" enctype="multipart/form-data">
+                    <div class="form-group-1">
+                        <img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="profile-pics">
+                        <input type="text" name="tweetText" id="tweetText" placeholder="What's happening?" required>
+                    </div>
+                    <div class="form-group-2">
+                        <div class="post-icons">
+                            <label for="imageUpload"><img src="/static/icons/image-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""></label>
+                            <input type="file" id="imageUpload" name="imageUpload" accept="image/*"
+                                style="display: none;">
+                            <label for="videoUpload"><img src="/static/icons/video-library-svgrepo-com.svg" style="width: 20px; height: 25px; " alt=""> </label>
+                            <input type="file" id="videoUpload" name="videoUpload" accept="video/*"
+                                style="display: none;">
+                        </div>
+                        <button class="btn" type="submit">Tweet</button>
+                    </div>
+                </form>
+            </div>
+            <!-- User Content -->
+            {% for tweet in tweets %}
+            <div class="tweets">
+                <div class="user-pics"><img src="{{ url_for('static', filename='img/profile.jpg') }}" alt="profile">
+                </div>
+                <div class="user-content-box">
+                    <div class="user-names">
+                        <h1 class="full-name">{{ tweet.username }}</h1>
+                        <p class="user-name">@king.david</p>
+                        <p class="time">. {{ tweet.timestamp.strftime('%b %d, %Y %H:%M') }}</p>
+                    </div>
+                    <div class="user-content">
+                        <p>{{ tweet.content }}</p>
+                        {% if tweet.image %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ tweet.image) }}" alt="Tweet Image">
+                        {% endif %}
+                        {% if tweet.video %}
+                        <video style="width: 500px; max-height: 650px;" src="{{ url_for('static', filename='uploads/' ~ tweet.video) }}" autoplay controls></video>
+                        {% endif %}
+                    </div>
+                    <div class="content-icons">
+                        <i class="far fa-comment blue"> 0</i>
+                        <i class="fas fa-retweet green"> 0</i>
+                        <i class="far fa-heart red"> 0</i>
+                        <i class="fas fa-chevron-up blue"></i>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="right-flex-container flex-item">
+            <div class="search-box">
+                <input type="text" placeholder="Search Twitter">
+                <div class="search-icon"><i class="fas fa-search"></i></div>
+            </div>
+            <div class="trends-container">
+                <div class="trends-header">
+                    <h1 class="main-text">Trends for you</h1>
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="trends">
+                    <div class="trend-title">
+                        <p class="sub-text">Trending in India</p>
+                        <p class="ellipsis"><i class="fas fa-ellipsis-h"></i></p>
+                    </div>
+                    <div class="trending-hashtag">
+                        <h1 class="main-text">#HappyBirthdaySelena</h1>
+                    </div>
+                    <div class="tweet-amount">
+                        <p class="sub-text">52.2K Tweets</p>
+                    </div>
+                </div>
+                <div class="trends">
+                    <div class="trend-title">
+                        <p class="sub-text">Trending in India</p>
+                        <p class="ellipsis"><i class="fas fa-ellipsis-h"></i></p>
+                    </div>
+                    <div class="trending-hashtag">
+                        <h1 class="main-text">#HappyBirthdaySelena</h1>
+                    </div>
+                    <div class="tweet-amount">
+                        <p class="sub-text">52.2K Tweets</p>
+                    </div>
+                </div>
+                <div class="trends">
+                    <div class="trend-title">
+                        <p class="sub-text">Trending in India</p>
+                        <p class="ellipsis"><i class="fas fa-ellipsis-h"></i></p>
+                    </div>
+                    <div class="trending-hashtag">
+                        <h1 class="main-text">#HappyBirthdaySelena</h1>
+                    </div>
+                    <div class="tweet-amount">
+                        <p class="sub-text">52.2K Tweets</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li class="footer-items"><a href="#">Terms of Service</a></li>
+                    <li class="footer-items"><a href="#">Privacy Policy</a></li>
+                    <li class="footer-items"><a href="#">Cookie Policy</a></li>
+                    <li class="footer-items"><a href="#">Accessibility</a></li>
+                    <li class="footer-items"><a href="#">Ads info</a></li>
+                    <li class="footer-items"><a href="#">More...</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
